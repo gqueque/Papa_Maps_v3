@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sua Página - PapaMaps</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="/css/login.css" />
+    <link rel="stylesheet" href="/css/global.css" />
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-card__form-section">
+      <h2>Login</h2>
+      <form id="login-form">
+        <label for="email">Email</label>
+        <input class="login-card__input" type="email" id="email" placeholder="Digite seu email" required />
+
+        <label for="password">Senha</label>
+        <input class="login-card__input" type="password" id="password" placeholder="Digite sua senha" required />
+
+        <button class="login-card__button" type="submit">Entrar</button>
+
+        <p id="feedback-message" class="login-card__message"></p>
+
+        <p class="login-card__links">Esqueceu a senha? <a href="recuperar.html">Recuperar</a></p>
+        <p class="login-card__links">Não tem uma conta? <a href="criar_conta.html">Criar agora</a></p>
+      </form>
+    </div>
+
+    <div class="login-card__image-section">
+      <img src="/assets/jackson_live.jpg.jpg" alt="Imagem do Papaizinho em um show" />
+    </div>
+  </div>
+
+  <script type="module" src="login.js"></script>
+</body>
+</html>

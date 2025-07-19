@@ -1,0 +1,48 @@
+/* Layout específico para a página de cadastro */
+
+.login-container {
+  display: flex;
+  width: 900px;
+  max-width: 90%;
+  background-color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.form-section {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.register {
+  margin-top: 10px;
+  text-align: center;
+  color: #555;
+}
+
+.image-section {
+  flex: 1;
+}
+
+.image-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+  .image-section {
+    display: none;
+  }
+  .form-section {
+    width: 100%;
+    padding: 25px;
+  }
+}
