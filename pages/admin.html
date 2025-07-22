@@ -1,7 +1,421 @@
-<form id="form-novo-evento">
-    <input type="text" id="event-name" placeholder="Nome do Evento" required>
-    <input type="text" id="event-address" placeholder="Endereço do Evento" required>
-    <button type="submit">Salvar Evento</button>
-</form>
-<script type="module" src="../assets/js/admin.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=SUA_CHAVE_API_DO_Maps&libraries=places&callback=initAdminAutocomplete"></script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Papa Maps</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/admin-style.css">
+    <link rel="icon" href="../assets/papa_logo.png" type="image/png">
+    
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initAdminMap"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="../assets/papa_logo.png" alt="Papa Maps">
+                <h1>Papa Maps Admin</h1>
+            </div>
+            <nav class="admin-nav">
+                <button id="backToMapBtn" class="nav-btn">
+                    <i class="fas fa-map"></i> Voltar ao Mapa
+                </button>
+                <button id="logoutBtn" class="nav-btn logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <nav class="admin-menu">
+                <button class="menu-item active" data-tab="events">
+                    <i class="fas fa-calendar"></i> Gerenciar Eventos
+                </button>
+                <button class="menu-item" data-tab="users">
+                    <i class="fas fa-users"></i> Usuários Cadastrados
+                </button>
+                <button class="menu-item" data-tab="notifications">
+                    <i class="fas fa-bell"></i> Notificações
+                </button>
+                <button class="menu-item" data-tab="analytics">
+                    <i class="fas fa-chart-bar"></i> Estatísticas
+                </button>
+                <button class="menu-item" data-tab="settings">
+                    <i class="fas fa-cog"></i> Configurações
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="admin-content">
+            <!-- Events Tab -->
+            <div id="events-tab" class="tab-content active">
+                <div class="tab-header">
+                    <h2><i class="fas fa-calendar"></i> Gerenciar Eventos</h2>
+                    <button id="newEventBtn" class="primary-btn">
+                        <i class="fas fa-plus"></i> Novo Evento
+                    </button>
+                </div>
+
+                <!-- Event Form -->
+                <div id="eventForm" class="form-card" style="display: none;">
+                    <div class="form-header">
+                        <h3 id="formTitle">Novo Evento</h3>
+                        <button id="cancelEventBtn" class="cancel-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <form id="eventFormData">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventName">Nome do Evento *</label>
+                                <input type="text" id="eventName" required placeholder="Ex: Show do Papaizinho - Rock in Rio">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventDate">Data do Evento *</label>
+                                <input type="date" id="eventDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventTime">Horário</label>
+                                <input type="time" id="eventTime" placeholder="Ex: 20:00">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventCategory">Categoria</label>
+                                <select id="eventCategory">
+                                    <option value="show">Show</option>
+                                    <option value="festival">Festival</option>
+                                    <option value="encontro">Encontro de Fãs</option>
+                                    <option value="especial">Evento Especial</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventAddress">Endereço Completo *</label>
+                            <input type="text" id="eventAddress" required placeholder="Digite o endereço completo do evento">
+                            <small>Use o autocomplete para garantir precisão na localização</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventDescription">Descrição</label>
+                            <textarea id="eventDescription" rows="3" placeholder="Descreva o evento, informações importantes, etc."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventPrice">Preço</label>
+                                <input type="text" id="eventPrice" placeholder="Ex: R$ 50,00 ou Gratuito">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventCapacity">Capacidade</label>
+                                <input type="number" id="eventCapacity" placeholder="Número máximo de pessoas">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventImage">URL da Imagem</label>
+                            <input type="url" id="eventImage" placeholder="https://exemplo.com/imagem.jpg">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="cancelEventBtn2" class="secondary-btn">Cancelar</button>
+                            <button type="submit" class="primary-btn">
+                                <i class="fas fa-save"></i> Salvar Evento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Events List -->
+                <div class="events-grid">
+                    <div id="eventsList" class="events-container">
+                        <!-- Eventos serão carregados aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users-tab" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-users"></i> Usuários Cadastrados</h2>
+                    <div class="search-box">
+                        <input type="text" id="userSearch" placeholder="Buscar usuários...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="totalUsers">-</span>
+                            <span class="stat-label">Total de Usuários</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="newUsersThisMonth">-</span>
+                            <span class="stat-label">Novos Este Mês</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="activeNotifications">-</span>
+                            <span class="stat-label">Notificações Ativas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="usersTable" class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>WhatsApp</th>
+                                <th>Localização</th>
+                                <th>Data de Cadastro</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Usuários serão carregados aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Notifications Tab -->
+            <div id="notifications-tab" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-bell"></i> Central de Notificações</h2>
+                    <button id="sendCustomNotificationBtn" class="primary-btn">
+                        <i class="fas fa-paper-plane"></i> Enviar Notificação
+                    </button>
+                </div>
+
+                <div class="notification-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="sentNotifications">-</span>
+                            <span class="stat-label">Enviadas Hoje</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="pendingNotifications">-</span>
+                            <span class="stat-label">Pendentes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Notification Form -->
+                <div id="customNotificationForm" class="form-card" style="display: none;">
+                    <div class="form-header">
+                        <h3>Enviar Notificação Personalizada</h3>
+                        <button id="cancelNotificationBtn" class="cancel-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <form id="notificationFormData">
+                        <div class="form-group">
+                            <label for="notificationTitle">Título da Notificação *</label>
+                            <input type="text" id="notificationTitle" required placeholder="Ex: Novo Show Confirmado!">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notificationMessage">Mensagem *</label>
+                            <textarea id="notificationMessage" rows="4" required placeholder="Digite a mensagem que será enviada via WhatsApp"></textarea>
+                            <small>Máximo 1000 caracteres</small>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="notificationRadius">Raio de Alcance (km)</label>
+                                <select id="notificationRadius">
+                                    <option value="all">Todos os usuários</option>
+                                    <option value="50">Até 50km</option>
+                                    <option value="100">Até 100km</option>
+                                    <option value="200">Até 200km</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="notificationLocation">Centro de Referência</label>
+                                <input type="text" id="notificationLocation" placeholder="Digite uma cidade ou endereço">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="cancelNotificationBtn2" class="secondary-btn">Cancelar</button>
+                            <button type="submit" class="primary-btn">
+                                <i class="fas fa-paper-plane"></i> Enviar Notificação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Notifications History -->
+                <div class="notifications-history">
+                    <h3>Histórico de Notificações</h3>
+                    <div id="notificationsHistory" class="history-container">
+                        <!-- Histórico será carregado aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics-tab" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-chart-bar"></i> Estatísticas e Analytics</h2>
+                    <div class="date-filter">
+                        <select id="analyticsTimeframe">
+                            <option value="7">Últimos 7 dias</option>
+                            <option value="30">Últimos 30 dias</option>
+                            <option value="90">Últimos 90 dias</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Usuários por Região</h3>
+                        <div id="regionChart" class="chart-container">
+                            <!-- Gráfico será renderizado aqui -->
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Eventos Mais Populares</h3>
+                        <div id="popularEventsChart" class="chart-container">
+                            <!-- Gráfico será renderizado aqui -->
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Taxa de Engajamento</h3>
+                        <div id="engagementChart" class="chart-container">
+                            <!-- Gráfico será renderizado aqui -->
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Crescimento de Usuários</h3>
+                        <div id="growthChart" class="chart-container">
+                            <!-- Gráfico será renderizado aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
+                </div>
+
+                <div class="settings-sections">
+                    <div class="settings-card">
+                        <h3>Configurações de Notificação</h3>
+                        <div class="setting-item">
+                            <label for="autoNotifyRadius">Raio automático para novos eventos (km)</label>
+                            <input type="number" id="autoNotifyRadius" value="200" min="10" max="500">
+                        </div>
+                        <div class="setting-item">
+                            <label for="notificationTemplate">Template padrão de notificação</label>
+                            <textarea id="notificationTemplate" rows="3">E aí, Papa-Fã! 🤘
+
+O Papaizinho marcou um novo show perto de você!
+
+Evento: *{eventName}*
+Local: {address}
+
+Confira todos os detalhes no PapaMaps!</textarea>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Integração WhatsApp (Z-API)</h3>
+                        <div class="setting-item">
+                            <label for="zapiInstance">Instance ID</label>
+                            <input type="text" id="zapiInstance" placeholder="Seu Instance ID da Z-API">
+                        </div>
+                        <div class="setting-item">
+                            <label for="zapiToken">Token</label>
+                            <input type="password" id="zapiToken" placeholder="Seu Token da Z-API">
+                        </div>
+                        <button class="test-btn">
+                            <i class="fas fa-vial"></i> Testar Conexão
+                        </button>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Configurações Gerais</h3>
+                        <div class="setting-item">
+                            <label for="maxEventsPerUser">Máximo de eventos por usuário</label>
+                            <input type="number" id="maxEventsPerUser" value="10" min="1" max="50">
+                        </div>
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enableAutoApproval"> 
+                                Aprovação automática de eventos
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enableEmailNotifications"> 
+                                Notificações por email
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <button class="primary-btn">
+                        <i class="fas fa-save"></i> Salvar Configurações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Carregando...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script type="module" src="../js/admin-manager.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+</body>
+</html>

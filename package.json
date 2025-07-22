@@ -1,0 +1,36 @@
+{
+  "name": "papa-maps-functions",
+  "version": "1.0.0",
+  "description": "Cloud Functions para Papa Maps - Sistema de eventos com notificações WhatsApp",
+  "main": "index.js",
+  "engines": {
+    "node": "18"
+  },
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "geofire-js": "^5.2.0",
+    "@googlemaps/google-maps-services-js": "^3.3.16"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true,
+  "keywords": [
+    "firebase",
+    "functions",
+    "whatsapp",
+    "maps",
+    "notifications",
+    "geolocation"
+  ],
+  "author": "Papa Maps Team",
+  "license": "MIT"
+}

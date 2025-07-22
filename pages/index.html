@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papa Maps - Eventos do Papaizinho</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/map-style.css">
+    <link rel="icon" href="../assets/papa_logo.png" type="image/png">
+    
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry&callback=initMap"></script>
+    
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="../assets/papa_logo.png" alt="Papa Maps">
+                <h1>Papa Maps</h1>
+            </div>
+            <nav class="nav">
+                <button id="loginBtn" class="nav-btn">
+                    <i class="fas fa-user"></i> Login
+                </button>
+                <button id="adminBtn" class="nav-btn admin-btn" style="display: none;">
+                    <i class="fas fa-cog"></i> Admin
+                </button>
+                <button id="logoutBtn" class="nav-btn logout-btn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Sidebar com filtros e informações -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <h2><i class="fas fa-filter"></i> Filtros</h2>
+                
+                <!-- Filtro de data -->
+                <div class="filter-group">
+                    <label for="dateFilter">Data do Evento</label>
+                    <select id="dateFilter" class="filter-select">
+                        <option value="all">Todos os eventos</option>
+                        <option value="today">Hoje</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month">Este mês</option>
+                        <option value="upcoming">Próximos</option>
+                    </select>
+                </div>
+
+                <!-- Filtro de distância -->
+                <div class="filter-group">
+                    <label for="distanceFilter">Distância</label>
+                    <select id="distanceFilter" class="filter-select">
+                        <option value="all">Qualquer distância</option>
+                        <option value="10">Até 10km</option>
+                        <option value="50">Até 50km</option>
+                        <option value="100">Até 100km</option>
+                        <option value="200">Até 200km</option>
+                    </select>
+                </div>
+
+                <!-- Busca por localização -->
+                <div class="filter-group">
+                    <label for="locationSearch">Buscar por local</label>
+                    <input type="text" id="locationSearch" class="filter-input" placeholder="Digite uma cidade...">
+                    <button id="searchLocationBtn" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <!-- Lista de eventos -->
+                <div class="events-list">
+                    <h3><i class="fas fa-calendar"></i> Próximos Eventos</h3>
+                    <div id="eventsList" class="events-container">
+                        <!-- Eventos serão carregados dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- Botão para cadastro -->
+                <div class="cta-section">
+                    <p>Não perca nenhum show!</p>
+                    <button id="registerBtn" class="cta-btn">
+                        <i class="fas fa-bell"></i> Receber Notificações
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mapa -->
+        <div class="map-container">
+            <div id="map" class="map"></div>
+            
+            <!-- Controles do mapa -->
+            <div class="map-controls">
+                <button id="myLocationBtn" class="map-control-btn" title="Minha localização">
+                    <i class="fas fa-crosshairs"></i>
+                </button>
+                <button id="fullscreenBtn" class="map-control-btn" title="Tela cheia">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+
+            <!-- Loading overlay -->
+            <div id="mapLoading" class="map-loading">
+                <div class="loading-spinner"></div>
+                <p>Carregando eventos...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de detalhes do evento -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalEventName"></h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="event-image">
+                    <img id="modalEventImage" src="../assets/papa_pino.png" alt="Evento">
+                </div>
+                <div class="event-details">
+                    <p><i class="fas fa-calendar"></i> <span id="modalEventDate"></span></p>
+                    <p><i class="fas fa-clock"></i> <span id="modalEventTime"></span></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="modalEventAddress"></span></p>
+                    <p><i class="fas fa-info-circle"></i> <span id="modalEventDescription"></span></p>
+                </div>
+                <div class="event-actions">
+                    <button id="shareEventBtn" class="action-btn">
+                        <i class="fas fa-share"></i> Compartilhar
+                    </button>
+                    <button id="directionsBtn" class="action-btn">
+                        <i class="fas fa-directions"></i> Como chegar
+                    </button>
+                    <button id="addToCalendarBtn" class="action-btn">
+                        <i class="fas fa-calendar-plus"></i> Adicionar à agenda
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de login/cadastro -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="authModalTitle">Login</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm">
+                    <div id="loginForm">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Senha</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="auth-btn">Entrar</button>
+                        <p class="auth-switch">
+                            Não tem conta? <a href="#" id="showRegister">Cadastre-se</a>
+                        </p>
+                    </div>
+
+                    <div id="registerForm" style="display: none;">
+                        <div class="form-group">
+                            <label for="registerName">Nome</label>
+                            <input type="text" id="registerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerWhatsapp">WhatsApp</label>
+                            <input type="tel" id="registerWhatsapp" placeholder="+55 11 99999-9999" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerAddress">Endereço</label>
+                            <input type="text" id="registerAddress" placeholder="Digite seu endereço completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Senha</label>
+                            <input type="password" id="registerPassword" required>
+                        </div>
+                        <button type="submit" class="auth-btn">Cadastrar</button>
+                        <p class="auth-switch">
+                            Já tem conta? <a href="#" id="showLogin">Faça login</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script type="module" src="../js/map.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/ui.js"></script>
+    <script type="module" src="../js/main.js"></script>
+</body>
+</html>
