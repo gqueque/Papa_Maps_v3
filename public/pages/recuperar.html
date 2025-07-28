@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recuperar Senha - PapaMaps</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="/public/css/global.css" />
+    <link rel="stylesheet" href="/public/css/login.css" />
+
+</head>
+<body>
+  <div class="login-card"> <div class="login-card__form-section">
+      <h2>Recuperar Senha</h2>
+      <p style="text-align: center; color: #666; margin-bottom: 20px;">
+        Não se preocupe! Digite seu e-mail abaixo e enviaremos um link para você criar uma nova senha.
+      </p>
+      
+      <form id="form-recuperar">
+        <label for="email">Seu e-mail de cadastro</label>
+        <input class="login-card__input" type="email" id="email" placeholder="Digite seu email" required />
+
+        <button class="login-card__button" type="submit">Enviar Link de Recuperação</button>
+      </form>
+
+      <p class="login-card__links">
+        Lembrou a senha? <a href="index.html">Voltar para o login</a>
+      </p>
+    </div>
+
+    <div class="login-card__image-section">
+     <img src="/public/assets/jackson_live.jpg.jpg" alt="Imagem do Papaizinho em um show" />
+    </div>
+  </div>
+
+  <script type="module" src="/js/auth.js"></script>
+</body>
+</html>

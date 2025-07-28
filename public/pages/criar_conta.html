@@ -1,15 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sua Página - PapaMaps</title>
+    <title>Criar Conta - PapaMaps</title>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <link rel="stylesheet" href="/css/cadastro.css" />
-    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/public/css/global.css" />
+    <link rel="stylesheet" href="/public/css/cadastro.css"/>
 </head>
 <body>
   <div class="login-container">
@@ -33,17 +32,16 @@
 
         <button type="submit" id="btn-cadastrar">Cadastrar</button>
 
-        <p class="register">Já tem uma conta? <a href="login.html">Faça login</a></p>
-        <p id="status-message"></p>
+        <p class="register">Já tem uma conta? <a href="/public/pages/index.html">Faça login</a></p>
       </form>
     </div>
     <div class="image-section">
-      <img src="../assets/jackson_live.jpg.jpg" alt="Imagem do Papaizinho" />
+      <img src="/public/assets/jackson_live.jpg.jpg" alt="Imagem do Papaizinho" />
     </div>
   </div>
 
-  <script type="module" src="/js/auth.js"></script>
+  <script type="module" src="/public/js/auth.js"></script>
 
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDihsUnJqNdTmeOOtphZDd0g2_xGrHoVRw&libraries=places"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhXLAHtaeY9_5AYsP5AWaHGLeDzuIEd4o&libraries=places&callback=initAutocomplete"></script>
 </body>
 </html>
