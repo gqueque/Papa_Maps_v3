@@ -5,12 +5,11 @@ import {
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
 import { auth, functions } from './firebase-config.js'; 
 
-// PASSO 1: Tornamos a função global novamente para que o "callback" do Google a encontre.
+// Esta função precisa ser global para ser chamada pelo "callback" do Google
 window.initAutocomplete = function() {
     const input = document.getElementById('endereco');
     if (!input) return; 
 
-    // Esta verificação agora é quase desnecessária, pois o Google garante que a API está pronta.
     if (!window.google || !window.google.maps || !window.google.maps.places) {
         console.error("A API do Google Maps não foi carregada corretamente.");
         return;
@@ -23,15 +22,12 @@ window.initAutocomplete = function() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // PASSO 2: REMOVEMOS a chamada manual daqui, pois o Google agora faz isso por nós.
-    // initAutocomplete(); 
 
-    // O resto do seu código para os formulários continua exatamente igual...
     const formLogin = document.getElementById('login-form');
     const formCadastro = document.getElementById('form-cadastro');
     const formRecuperar = document.getElementById('form-recuperar');
 
-    // --- LÓGICA DE LOGIN (BLOCO QUE FALTAVA) ---
+    // --- LÓGICA DE LOGIN ---
     if (formLogin) {
         formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -48,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
-                        window.location.href = '/public/pages/criar_conta.html'; // Redireciona para a página principal
+                        // CORREÇÃO 1: Redireciona para a página principal (o mapa)
+                        window.location.href = '/'; 
                     });
                 })
                 .catch((error) => {
@@ -61,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- LÓGICA DE CADASTRO (SEU CÓDIGO ATUAL, SEM MUDANÇAS) ---
+    // --- LÓGICA DE CADASTRO ---
     if (formCadastro) {
         formCadastro.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -88,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: 'Cadastro realizado!',
                     text: result.data.message,
                 }).then(() => {
-                    window.location.href = 'login.html';
+                    // CORREÇÃO 2: Redireciona para a página de login correta
+                    window.location.href = '/pages/login.html';
                 });
 
             } catch (error) {
@@ -101,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- PASSO 2: ADICIONAR O BLOCO PARA 'ESQUECI A SENHA' ---
+    // --- LÓGICA DE RECUPERAR SENHA ---
     if (formRecuperar) {
         formRecuperar.addEventListener('submit', (e) => {
             e.preventDefault();

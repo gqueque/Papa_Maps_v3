@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PapaMaps - Explore os Eventos</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+    <header class="main-header">
+        <img src="assets/explore1.png" alt="Logo Explore" class="logo-header">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Buscar eventos por cidade..." />
+            <button id="searchButton">Buscar</button>
+        </div>
+        <nav class="main-nav">
+            <a href="https://www.farjackson.com/product-page/nissan-altima" target="_blank">BUY NISSAN ALTIMA</a>
+            <button id="btnMinhaConta" class="nav-button">Minha Conta</button>
+        </nav>
+    </header>
+
+    <div id="map"></div>
+
+    <button id="btnRecomendar" class="recommend-button">+ Onde você quer ver o Papaizinho tocar?</button>
+
+    <div id="modalConta" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Minha Conta</h3>
+            <form id="formConta">
+                <label for="contaNome">Nome:</label>
+                <input type="text" id="contaNome" required />
+                <label for="contaEndereco">Endereço:</label>
+                <input type="text" id="contaEndereco" required />
+                <label for="contaTelefone">WhatsApp:</label>
+                <input type="tel" id="contaTelefone" required />
+                <p id="contaEmail"></p>
+                <div class="modal-actions">
+                    <button type="submit" id="btnSalvarConta">Salvar</button>
+                    <button type="button" id="btnLogout">Sair</button>
+                    <button type="button" class="btn-close-modal">Fechar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalSugestao" class="modal-overlay hidden">
+        <div class="modal-content suggestion-modal">
+            <div class="form-left">
+                <h3>Onde você quer ver o Papaizinho tocar?</h3>
+                <form id="formSugestao">
+                    <input type="text" id="localInput" placeholder="Digite o nome de um local ou cidade" required />
+                    <div class="modal-actions">
+                        <button type="submit" class="enviar">Enviar Sugestão</button>
+                        <button type="button" class="btn-close-modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="form-right">
+                <img src="assets/papa_pino.png" alt="Pino Papa" />
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhXLAHtaeY9_5AYsP5AWaHGLeDzuIEd4o&libraries=places"></script>
+    
+    <script type="module" src="/js/admin.js"></script>
+</body>
+</html>
