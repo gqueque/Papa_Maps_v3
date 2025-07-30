@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Eventos - PapaMaps Admin</title>
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>PapaMaps Admin</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/pages/admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li class="active"><a href="/pages/eventos.html"><i class="fas fa-map-marker-alt"></i> Eventos</a></li>
+                    <li><a href="#"><i class="fas fa-lightbulb"></i> Sugestões</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Usuários</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <header class="main-header">
+                <h1>Gerenciamento de Eventos</h1>
+                <div class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </header>
+
+            <main>
+                <section class="main-panels">
+                    <div class="panel">
+                        <h2>Criar Novo Show</h2>
+                        <form id="form-novo-evento">
+                            <label for="event-name">Nome do Evento</label>
+                            <input type="text" id="event-name" placeholder="Ex: Papa Sunset Session" required>
+                            
+                            <label for="event-address">Endereço do Local</label>
+                            <input type="text" id="event-address" placeholder="Digite o endereço e selecione na lista" required>
+                            
+                            <label for="event-date">Data e Hora</label>
+                            <input type="datetime-local" id="event-date" required>
+
+                            <button type="submit" class="full-width-button">Salvar Evento</button>
+                        </form>
+                    </div>
+                    <div class="panel">
+                        <h2>Eventos no Mapa</h2>
+                        <div id="events-map-container" class="map-placeholder"></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhXLAHtaeY9_5AYsP5AWaHGLeDzuIEd4o&libraries=places"></script>
+    <script type="module" src="/js/eventos.js"></script>
+</body>
+</html>

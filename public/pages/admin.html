@@ -4,61 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - PapaMaps</title>
+    
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/admin.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>PapaMaps Admin</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li class="active"><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Eventos</a></li>
-                    <li><a href="#"><i class="fas fa-lightbulb"></i> Sugestões</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> Usuários</a></li>
-                </ul>
-            </nav>
-        </aside>
+            </aside>
 
         <div class="main-content">
             <header class="main-header">
-                <h1>Dashboard</h1>
-                <div class="user-profile">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-            </header>
+                </header>
 
             <main>
                 <section class="kpi-cards">
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-map-marked-alt"></i></div>
                         <div class="card-info">
-                            <span class="card-value">24</span>
+                            <span id="kpi-shows" class="card-value">0</span>
                             <span class="card-label">Total de Shows Aprovados</span>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
                         <div class="card-info">
-                            <span class="card-value">87</span>
-                            <span class="card-label">Sugestões Pendentes</span>
+                            <span id="kpi-sugestoes" class="card-value">0</span>
+                            <span class="card-label">Sugestões Recebidas</span>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-user-friends"></i></div>
                         <div class="card-info">
-                            <span class="card-value">1,234</span>
+                            <span id="kpi-usuarios" class="card-value">0</span>
                             <span class="card-label">Total de Usuários</span>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-bell"></i></div>
                         <div class="card-info">
-                            <span class="card-value">567</span>
+                            <span id="kpi-notificacoes" class="card-value">--</span>
                             <span class="card-label">Notificações Enviadas</span>
                         </div>
                     </div>
@@ -67,64 +56,19 @@
                 <section class="main-panels">
                     <div class="panel heatmap-panel">
                         <h2>Mapa de Calor de Sugestões</h2>
-                        <div class="map-placeholder">
-                            <i class="fas fa-map"></i>
-                            <p>Mapa do Brasil com Heatmap</p>
-                            <span>Concentração de sugestões por região</span>
-                        </div>
+                        <div id="heatmap-container" class="map-placeholder"></div>
                     </div>
                     <div class="panel top-cities-panel">
                         <h2>Cidades Mais Pedidas</h2>
-                        <ul class="cities-list">
-                            <li>
-                                <span>Recife</span>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: 100%;"></div>
-                                </div>
-                                <span>150 sugestões</span>
-                            </li>
-                            <li>
-                                <span>São Paulo</span>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: 89%;"></div>
-                                </div>
-                                <span>134 sugestões</span>
-                            </li>
-                            <li>
-                                <span>Rio de Janeiro</span>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: 65%;"></div>
-                                </div>
-                                <span>98 sugestões</span>
-                            </li>
-                            <li>
-                                <span>Salvador</span>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: 50%;"></div>
-                                </div>
-                                <span>76 sugestões</span>
-                            </li>
-                            <li>
-                                <span>Fortaleza</span>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: 42%;"></div>
-                                </div>
-                                <span>63 sugestões</span>
-                            </li>
-                             <li>
-                                <span>Brasília</span>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: 30%;"></div>
-                                </div>
-                                <span>45 sugestões</span>
-                            </li>
-                        </ul>
+                        <ul id="cities-list-container" class="cities-list">
+                            </ul>
                     </div>
                 </section>
             </main>
         </div>
     </div>
-
-    <script type="module" src="/js/admin.js"></script>
+    <li><a href="/pages/eventos.html"><i class="fas fa-map-marker-alt"></i> Eventos</a></li>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script> <script type="module" src="/js/admin.js"></script>
 </body>
 </html>

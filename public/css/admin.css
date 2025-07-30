@@ -181,3 +181,46 @@ body {
     background-color: #588157;
     border-radius: 5px;
 }
+
+/* Estilos para a página de eventos */
+.main-panels {
+    grid-template-columns: 1fr 2fr; /* Coluna do formulário menor, mapa maior */
+}
+
+#events-map-container {
+    height: 450px;
+    border-radius: 5px;
+}
+
+#form-novo-evento {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#form-novo-evento label {
+    font-weight: bold;
+    margin-bottom: -10px;
+}
+
+#form-novo-evento input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.full-width-button {
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #588157; /* Verde PapaMaps */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.full-width-button:hover {
+    background-color: #3a5a40; /* Verde mais escuro */
+}
