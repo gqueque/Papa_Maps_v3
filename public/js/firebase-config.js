@@ -8,8 +8,9 @@ import { getFunctions } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 const firebaseConfig = {
   apiKey: "AIzaSyDhXLAHtaeY9_5AYsP5AWaHGLeDzuIEd4o",
   authDomain: "papa-maps.firebaseapp.com",
+  databaseURL: "https://papa-maps-default-rtdb.firebaseio.com",
   projectId: "papa-maps",
-  storageBucket: "papa-maps.appspot.com",
+  storageBucket: "papa-maps.firebasestorage.app",
   messagingSenderId: "166696313837",
   appId: "1:166696313837:web:c8b732a1182010f69bfde4",
   measurementId: "G-GLBNEFGF6K"

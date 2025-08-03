@@ -1,5 +1,12 @@
 /* Estilos para a página principal (mapa) */
-
+/* Garante que o mapa ocupe a tela inteira */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* Evita barras de rolagem desnecessárias */
+}
 /* Cabeçalho */
 .main-header {
     position: fixed;
@@ -56,12 +63,13 @@
 
 /* Mapa */
 #map {
+    height: 100%; /* Esta é a linha mais importante */
+    width: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 100%;
     z-index: 1;
+
 }
 
 /* Botão Flutuante de Recomendar */

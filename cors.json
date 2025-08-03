@@ -1,0 +1,12 @@
+[
+  {
+    "origin": ["http://localhost:5000", "http://127.0.0.1:5501", "https://papa-maps.web.app", "http://localhost:5000"],
+    "method": ["GET", "POST", "PUT", "DELETE", "HEAD"],
+    "responseHeader": [
+      "Content-Type",
+      "Access-Control-Allow-Origin",
+      "x-goog-resumable"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]

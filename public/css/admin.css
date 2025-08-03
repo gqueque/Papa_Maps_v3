@@ -20,6 +20,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 10;
 }
 
 .sidebar-header {
@@ -64,6 +65,12 @@ body {
     margin-left: 250px; /* Espaço para a barra lateral */
     padding: 20px;
     width: calc(100% - 250px);
+    
+    /* MODIFICAÇÃO 1: Faz o contêiner principal ser uma coluna flexível que ocupa a altura toda */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    box-sizing: border-box;
 }
 
 .main-header {
@@ -84,13 +91,20 @@ body {
     cursor: pointer;
 }
 
+/* MODIFICAÇÃO 2: A tag <main> agora vai crescer para preencher o espaço */
+main {
+    flex: 1; /* Faz esta área se esticar e ocupar todo o espaço vertical restante */
+    display: flex;
+    flex-direction: column;
+}
+
 
 /* --- Cartões KPI --- */
 .kpi-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .card {
@@ -120,18 +134,14 @@ body {
 }
 
 
-/* --- Painéis Principais --- */
-.main-panels {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-}
-
+/* --- Painéis Principais e Layouts Específicos --- */
 .panel {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex; 
+    flex-direction: column;
 }
 
 .panel h2 {
@@ -140,20 +150,24 @@ body {
     padding-bottom: 10px;
 }
 
-/* Painel do Mapa */
-.heatmap-panel .map-placeholder {
-    height: 300px;
-    background-color: #eaf0f7;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #9ab0c9;
+/* Layout para a PÁGINA DO DASHBOARD */
+.dashboard-page .main-panels {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    flex: 1; /* Faz a seção dos painéis crescer para preencher a tag <main> */
 }
-.map-placeholder i { font-size: 4rem; margin-bottom: 15px; }
-.map-placeholder p { font-weight: bold; margin: 0; }
-.map-placeholder span { font-size: 0.9rem; }
+
+/* Layout para a PÁGINA DE EVENTOS */
+.eventos-page .main-panels {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    flex: 1; /* Faz a seção dos painéis crescer para preencher a tag <main> */
+}
+
+
+/* --- Estilos dos Componentes dos Painéis --- */
 
 /* Painel das Cidades */
 .cities-list {
@@ -183,13 +197,9 @@ body {
 }
 
 /* Estilos para a página de eventos */
-.main-panels {
-    grid-template-columns: 1fr 2fr; /* Coluna do formulário menor, mapa maior */
-}
-
 #events-map-container {
-    height: 450px;
     border-radius: 5px;
+    flex: 1; /* Faz o mapa crescer para preencher o painel */
 }
 
 #form-novo-evento {
@@ -214,7 +224,7 @@ body {
     font-size: 1rem;
     font-weight: bold;
     color: white;
-    background-color: #588157; /* Verde PapaMaps */
+    background-color: #588157;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -222,5 +232,11 @@ body {
 }
 
 .full-width-button:hover {
-    background-color: #3a5a40; /* Verde mais escuro */
+    background-color: #3a5a40;
+}
+
+/* Contêiner do mapa de calor */
+#heatmap-container {
+    border-radius: 5px;
+    flex: 1; /* Faz o mapa crescer para preencher o painel */
 }

@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Função para buscar e preencher os números dos cartões (KPIs)
     async function fetchKPIs() {
         try {
-            // Conta os documentos em cada coleção
             const usersCollection = collection(db, "users");
             const suggestionsCollection = collection(db, "suggestions");
             const eventsCollection = collection(db, "events");
@@ -16,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const suggestionsSnapshot = await getCountFromServer(suggestionsCollection);
             const eventsSnapshot = await getCountFromServer(eventsCollection);
 
-            // Atualiza o HTML com os números reais
             document.getElementById('kpi-usuarios').textContent = usersSnapshot.data().count;
             document.getElementById('kpi-sugestoes').textContent = suggestionsSnapshot.data().count;
             document.getElementById('kpi-shows').textContent = eventsSnapshot.data().count;
@@ -38,16 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
             querySnapshot.forEach(doc => {
                 const suggestion = doc.data();
                 
-                // Adiciona ponto ao mapa de calor (se tiver coordenadas)
                 if (suggestion.geoloc && suggestion.geoloc.coordinates) {
                     const { latitude, longitude } = suggestion.geoloc.coordinates;
-                    // O formato para o heatmap é [lat, lng, intensidade]
                     heatmapPoints.push([latitude, longitude, 0.5]);
                 }
 
-                // Conta as cidades
                 if (suggestion.localSugerido) {
-                    // Tenta extrair apenas o nome da cidade
                     const city = suggestion.localSugerido.split(',').slice(-2, -1)[0]?.trim() || suggestion.localSugerido;
                     cityCounts[city] = (cityCounts[city] || 0) + 1;
                 }
@@ -61,10 +55,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Função para inicializar o mapa de calor
+    // Função para inicializar o mapa de calor (VERSÃO MODIFICADA)
     function initializeHeatmap(points) {
-        if (points.length === 0) return;
+        const mapContainer = document.getElementById('heatmap-container');
+
+        // Se não houver pontos, exibe uma mensagem e para.
+        if (points.length === 0) {
+            mapContainer.innerHTML = '<p style="text-align:center; margin-top: 50px;">Nenhuma sugestão com geolocalização para exibir o mapa de calor.</p>';
+            return;
+        }
         
+        // Remove a classe de placeholder para que o mapa apareça corretamente.
+        mapContainer.classList.remove('map-placeholder');
+
         const map = L.map('heatmap-container').setView([-14.235, -51.925], 4);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
@@ -79,11 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderTopCities(cityCounts) {
         const sortedCities = Object.entries(cityCounts)
             .sort(([,a],[,b]) => b - a)
-            .slice(0, 6); // Pega as 6 cidades mais votadas
+            .slice(0, 6);
 
         const maxSuggestions = sortedCities.length > 0 ? sortedCities[0][1] : 1;
         const container = document.getElementById('cities-list-container');
-        container.innerHTML = ''; // Limpa a lista antes de preencher
+        container.innerHTML = '';
 
         for (const [city, count] of sortedCities) {
             const percentage = (count / maxSuggestions) * 100;
@@ -100,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Chama as funções para carregar os dados quando a página abrir
+    // Chama as funções para carregar os dados
     fetchKPIs();
     fetchSuggestionsData();
 });
