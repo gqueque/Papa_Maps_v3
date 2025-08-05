@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const address = addressInput.value;
         const eventDate = document.getElementById('event-date').value;
         const imageFile = imageInput.files[0]; // Pega o arquivo de imagem
+        const ticketLink = document.getElementById('event-ticket-link').value; // <-- LINHA NOVA
 
         if (!selectedPlace) {
             return Swal.fire('Erro!', 'Por favor, selecione um endereço da lista de sugestões do Google.', 'error');
@@ -88,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 address: address,
                 date: new Date(eventDate),
                 imageUrl: imageUrl, // Adiciona a URL da imagem ao documento
+                ticketLink: ticketLink || null, // <-- LINHA NOVA (salva o link ou null se estiver vazio)
                 geoloc: {
                     coordinates: new GeoPoint(lat, lng)
                 }

@@ -1,17 +1,86 @@
-// Este é o JavaScript para a sua página principal (index.html do frontend)
+const admin = require("firebase-admin");
+const geofire = require("geofire-common");
+const {Client} = require("@googlemaps/google-maps-services-js");
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("Script da página principal (index.js do frontend) carregado com sucesso!");
+// Importações da v2
+const {onCall, HttpsError} = require("firebase-functions/v2/https");
+const {defineString} = require("firebase-functions/params");
 
-  // Futuramente, aqui você colocará o código para iniciar o mapa Leaflet
-  // Exemplo de como seria:
-  /*
-  const map = L.map('map').setView([-8.0578, -34.8829], 13); // Coordenadas de Recife
-  
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-  
-  console.log("Mapa iniciado!");
-  */
+admin.initializeApp();
+const db = admin.firestore();
+const googleMapsClient = new Client({});
+
+// Definindo o parâmetro da nossa chave de API
+const googleMapsApiKey = defineString("Maps_API_KEY");
+
+// --- FUNÇÃO DE CADASTRO DE USUÁRIO (A que estava faltando) ---
+exports.cadastrarUsuarioComGeolocalizacao = onCall({region: "southamerica-east1"}, async (request) => {
+  const {nome, email, senha, whatsapp, endereco} = request.data;
+
+  if (!nome || !email || !senha || !whatsapp || !endereco) {
+    throw new HttpsError("invalid-argument", "Todos os campos são obrigatórios.");
+  }
+
+  try {
+    const geocodeResponse = await googleMapsClient.geocode({
+      params: {
+        address: endereco,
+        key: googleMapsApiKey.value(),
+      },
+    });
+
+    if (!geocodeResponse.data.results || !geocodeResponse.data.results.length) {
+      throw new HttpsError("not-found", "Endereço não pôde ser encontrado.");
+    }
+
+    const location = geocodeResponse.data.results[0].geometry.location;
+    const lat = location.lat;
+    const lng = location.lng;
+
+    const userRecord = await admin.auth().createUser({
+      email: email,
+      password: senha,
+      displayName: nome,
+      phoneNumber: whatsapp,
+    });
+
+    const geohash = geofire.geohashForLocation([lat, lng]);
+    const userData = {
+      nome: nome,
+      whatsapp: whatsapp,
+      enderecoCompleto: endereco,
+      geoloc: {
+        geohash: geohash,
+        coordinates: new admin.firestore.GeoPoint(lat, lng),
+      },
+    };
+
+    await db.collection("users").doc(userRecord.uid).set(userData);
+
+    return {success: true, message: "Usuário criado com sucesso!", uid: userRecord.uid};
+  } catch (error) {
+    console.error("Erro na criação do usuário:", error);
+    if (error.code === "auth/email-already-exists") {
+      throw new HttpsError("already-exists", "O e-mail fornecido já está em uso.");
+    }
+    throw new HttpsError("internal", "Ocorreu um erro inesperado. Tente novamente.");
+  }
+});
+
+// --- FUNÇÃO PARA TRANSFORMAR UM USUÁRIO EM ADMIN ---
+exports.addAdminRole = onCall({region: "southamerica-east1"}, async (request) => {
+    // Proteção: Apenas um admin já existente pode chamar esta função
+    if (request.auth.token.admin !== true) {
+        throw new HttpsError("permission-denied", "Apenas admins podem adicionar outros admins.");
+    }
+    
+    const email = request.data.email;
+    try {
+        const user = await admin.auth().getUserByEmail(email);
+        await admin.auth().setCustomUserClaims(user.uid, { admin: true });
+        return { message: `Sucesso! ${email} agora é um admin.` };
+    } catch (error) {
+        console.error("Erro ao adicionar admin:", error);
+        throw new HttpsError("internal", "Erro ao encontrar o usuário ou definir a permissão.");
+    }
 });

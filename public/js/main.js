@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalSugestao = document.getElementById('modalSugestao');
     const formSugestao = document.getElementById('formSugestao');
     const closeButtons = document.querySelectorAll('.btn-close-modal');
-    // ELEMENTOS PARA A BUSCA
     const searchInput = document.getElementById('searchInput');
     const searchButton = document.getElementById('searchButton');
     
@@ -44,7 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const querySnapshot = await getDocs(collection(db, "events"));
             allEventsData = [];
             querySnapshot.forEach((doc) => {
-                allEventsData.push(doc.data());
+                const eventData = doc.data();
+                eventData.id = doc.id;
+                allEventsData.push(eventData);
             });
             displayEvents(allEventsData);
         } catch (error) {
@@ -52,12 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // NOVA FUNÇÃO para desenhar/redesenhar os pins
     function displayEvents(eventsToDisplay) {
         markersLayer.clearLayers();
         const markersBounds = [];
 
-        if (eventsToDisplay.length === 0) {
+        if (eventsToDisplay.length === 0 && searchInput.value.trim() !== '') {
             Swal.fire('Nenhum resultado', 'Nenhum show encontrado com esse termo.', 'info');
             return;
         }
@@ -65,20 +65,41 @@ document.addEventListener('DOMContentLoaded', () => {
         eventsToDisplay.forEach((event) => {
             if (event.geoloc && event.geoloc.coordinates) {
                 const { latitude, longitude } = event.geoloc.coordinates;
+                const dataFormatada = event.date ? new Date(event.date.seconds * 1000).toLocaleDateString('pt-BR') : 'Data não informada';
+                
+                let popupContent = `<div class="map-popup">`;
+                
+                if (event.imageUrl) {
+                    popupContent += `<img src="${event.imageUrl}" alt="${event.eventName}" class="popup-image">`;
+                }
+                
+                popupContent += `<div class="popup-info">
+                                    <strong>${event.eventName}</strong><br>
+                                    <small>${event.address}</small><br>
+                                    <small>${dataFormatada}</small>
+                                 </div>`;
+                
+                if (event.ticketLink) {
+                    popupContent += `<a href="${event.ticketLink}" target="_blank" class="btn btn-primary popup-ticket-button">Comprar Ingresso</a>`;
+                }
+
+                popupContent += `</div>`;
+                
                 const marker = L.marker([latitude, longitude], { icon: papaIcon })
-                    .bindPopup(`<strong>${event.eventName}</strong><br>${event.address}`);
+                    .bindPopup(popupContent);
                 
                 markersLayer.addLayer(marker);
                 markersBounds.push([latitude, longitude]);
             }
         });
 
-        if (markersBounds.length > 0) {
+        if (markersBounds.length > 0 && searchInput.value.trim() === '') {
+            // Não damos zoom se for uma busca, para manter o foco do usuário
+        } else if (markersBounds.length > 0) {
             map.fitBounds(markersBounds);
         }
     }
 
-    // NOVA FUNÇÃO para a lógica da busca
     function handleSearch() {
         const searchTerm = searchInput.value.toLowerCase().trim();
 
@@ -97,12 +118,23 @@ document.addEventListener('DOMContentLoaded', () => {
         displayEvents(filteredEvents);
     }
     
-    // --- LÓGICA DE AUTENTICAÇÃO ---
+// --- LÓGICA DE AUTENTICAÇÃO ATUALIZADA ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
             currentUser = user;
             userDocRef = doc(db, "users", currentUser.uid);
             if(btnMinhaConta) btnMinhaConta.classList.remove('hidden');
+
+            // ADICIONADO: Verificação de permissão de admin
+            user.getIdTokenResult().then((idTokenResult) => {
+                if (idTokenResult.claims.admin) {
+                    console.log("Usuário é admin. Mostrando o botão do painel.");
+                    if (btnAdminPanel) {
+                        btnAdminPanel.classList.remove('hidden');
+                    }
+                }
+            });
+
         } else {
             window.location.href = '/pages/login.html';
         }
@@ -183,17 +215,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
+    // FUNÇÃO ATUALIZADA para restringir o autocomplete de sugestões
     function initializeAutocompletes() {
         if (!window.google) return; 
         
+        // Autocomplete para o modal "Minha Conta" (endereço completo)
         const contaEnderecoInput = document.getElementById("contaEndereco");
         if (contaEnderecoInput) {
             new google.maps.places.Autocomplete(contaEnderecoInput);
         }
 
+        // Autocomplete para o modal "Sugerir Local" (restringido para cidades)
         const localInput = document.getElementById("localInput");
         if (localInput) {
-            const autocomplete = new google.maps.places.Autocomplete(localInput);
+            const cityOptions = {
+                types: ['(cities)'],
+                componentRestrictions: { country: "br" } // Apenas cidades do Brasil, se tirar essa linha, pega qualquer cidade do mundo
+            };
+            const autocomplete = new google.maps.places.Autocomplete(localInput, cityOptions);
             autocomplete.addListener("place_changed", () => {
                 const place = autocomplete.getPlace();
                 if (place.geometry) {

@@ -1,25 +1,32 @@
+
+
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Permite que QUALQUER USUÁRIO LOGADO leia as coleções
-    // de eventos, sugestões e usuários.
-    match /{collectionName}/{docId} {
-      allow read: if request.auth != null;
-    }
-
-    // Regras de escrita permanecem mais restritas
+    // Regra ATUALIZADA para a coleção de Eventos
     match /events/{eventId} {
-      allow write: if request.auth != null; // Apenas logados podem escrever
+      // QUALQUER UM (visitantes, usuários) pode ler a lista de eventos.
+      allow read: if true;
+      // APENAS ADMINS podem criar, atualizar ou deletar eventos.
+      allow write: if request.auth.token.admin == true;
     }
 
+    // Regra ATUALIZADA para a coleção de Usuários
     match /users/{userId} {
-      // Um usuário só pode ATUALIZAR seus próprios dados
-      allow update: if request.auth != null && request.auth.uid == userId;
+      // ADMINS podem listar (e contar) todos os usuários.
+      allow list: if request.auth.token.admin == true;
+      // Um usuário (admin ou não) pode ler e escrever seus próprios dados.
+      allow read, write: if request.auth.uid == userId;
     }
 
+    // Regra ATUALIZADA para a coleção de Sugestões
     match /suggestions/{suggestionId} {
-      allow create: if request.auth != null; // Apenas logados podem criar
+      // ADMINS podem ler a lista toda.
+      allow list: if request.auth.token.admin == true;
+      // Qualquer usuário logado pode criar uma sugestão.
+      allow create: if request.auth != null;
     }
   }
 }

@@ -240,3 +240,176 @@ main {
     border-radius: 5px;
     flex: 1; /* Faz o mapa crescer para preencher o painel */
 }
+
+/* Estilos para a lista de gerenciamento de eventos */
+.event-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+.event-card-info {
+    display: flex;
+    flex-direction: column;
+}
+.event-card-info small { color: #777; }
+.event-card-actions { display: flex; gap: 10px; }
+.btn-icon {
+    background: transparent;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.btn-icon:hover { background-color: #f0f0f0; }
+.btn-delete:hover { color: #e74c3c; border-color: #e74c3c; }
+
+
+/* Estilos para Modais (Reutilizável) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    width: 500px;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- ESTILOS PARA A TABELA DE GERENCIAMENTO DE EVENTOS (VERSÃO CORRIGIDA) --- */
+
+.event-table {
+    width: 100%;
+    border-collapse: collapse; /* Remove o espaçamento entre as células */
+    font-size: 0.9rem;
+}
+
+.event-table thead {
+    background-color: #f8f9fa; /* Fundo cinza claro para o cabeçalho */
+}
+
+/* A borda agora foi removida daqui... */
+.event-table th, .event-table td {
+    padding: 15px;
+    text-align: left;
+    /* Adicionado para garantir o alinhamento vertical */
+    vertical-align: middle; 
+}
+
+/* ...E adicionada à linha inteira (tr) para ficar contínua */
+.event-table tbody tr {
+    border-bottom: 1px solid #dee2e6; /* Linha sutil separando as linhas */
+}
+
+/* Remove a borda da última linha para um acabamento melhor */
+.event-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+
+.event-table th {
+    font-weight: bold;
+    color: #495057;
+}
+
+.event-table td {
+    color: #343a40;
+}
+
+/* Estilos para as colunas específicas */
+.event-table td strong {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 3px;
+}
+
+.event-table td small {
+    color: #6c757d;
+}
+
+.notification-status {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.notification-status div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.notification-status i {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+}
+
+.notification-status .sent {
+    color: #28a745; /* Verde para notificações enviadas */
+}
+
+.notification-status .pending {
+    color: #adb5bd; /* Cinza para notificações pendentes */
+}
+
+.action-buttons {
+    text-align: right;
+    
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 5px 8px;
+    color: #6c757d;
+}
+
+.btn-icon:hover {
+    color: #343a40;
+}
+
+.btn-delete:hover {
+    color: #e74c3c; /* Vermelho ao passar o mouse no ícone de lixeira */
+}

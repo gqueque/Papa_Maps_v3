@@ -5,7 +5,7 @@ html, body {
     padding: 0;
     height: 100%;
     width: 100%;
-    overflow: hidden; /* Evita barras de rolagem desnecessárias */
+    overflow: hidden; 
 }
 /* Cabeçalho */
 .main-header {
@@ -17,7 +17,7 @@ html, body {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #3a5a40; /* Verde escuro */
+    background-color: #3a5a40; 
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     z-index: 1000;
     box-sizing: border-box;
@@ -63,13 +63,12 @@ html, body {
 
 /* Mapa */
 #map {
-    height: 100%; /* Esta é a linha mais importante */
+    height: 100%; 
     width: 100%;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 1;
-
 }
 
 /* Botão Flutuante de Recomendar */
@@ -78,7 +77,7 @@ html, body {
     bottom: 20px;
     right: 20px;
     z-index: 999;
-    background-color: #588157; /* Verde médio */
+    background-color: #588157; 
     color: white;
     padding: 15px 25px;
     border-radius: 50px;
@@ -162,11 +161,35 @@ html, body {
     display: none !important;
 }
 
-/* CORREÇÃO DEFINITIVA: Força o dropdown do Google Places a aparecer na frente de TUDO */
 .pac-container {
     background-color: #FFF;
-    position: fixed !important; /* Garante que ele não fique preso a outros elementos */
-    z-index: 9999 !important; /* Um valor absurdamente alto para garantir a prioridade */
+    position: fixed !important; 
+    z-index: 9999 !important; 
     border-radius: 5px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* --- ESTILOS PARA O POPUP DO MAPA --- */
+.map-popup {
+    text-align: center;
+    line-height: 1.4;
+}
+
+.map-popup .popup-image {
+    width: 100%;
+    max-height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.map-popup .popup-info {
+    margin-bottom: 15px;
+}
+
+.map-popup .popup-ticket-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    width: 100%;
+    box-sizing: border-box;
 }
