@@ -113,6 +113,8 @@ html, body {
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
     width: 400px;
+    max-width: 90%; /* Garante que não ultrapasse a tela */
+    box-sizing: border-box;
 }
 
 .modal-content h3 {
@@ -169,12 +171,10 @@ html, body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* --- ESTILOS PARA O POPUP DO MAPA --- */
 .map-popup {
     text-align: center;
     line-height: 1.4;
 }
-
 .map-popup .popup-image {
     width: 100%;
     max-height: 120px;
@@ -182,14 +182,45 @@ html, body {
     border-radius: 5px;
     margin-bottom: 10px;
 }
-
 .map-popup .popup-info {
     margin-bottom: 15px;
 }
-
 .map-popup .popup-ticket-button {
     padding: 8px 16px;
     font-size: 0.9rem;
     width: 100%;
     box-sizing: border-box;
+}
+
+/* --- ESTILOS RESPONSIVOS PARA TELAS PEQUENAS --- */
+@media (max-width: 768px) {
+    /* Ajustes no Cabeçalho */
+    .main-header {
+        padding: 10px;
+    }
+
+    .main-header .search-container {
+        display: none; /* Esconde a busca em telas pequenas por enquanto */
+    }
+
+    .main-nav a {
+        display: none; /* Esconde o link "BUY NISSAN ALTIMA" */
+    }
+
+    /* Ajustes no Botão Flutuante */
+    .recommend-button {
+        font-size: 0.9rem;
+        padding: 12px 20px;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    /* Ajustes no Modal de Sugestão */
+    .suggestion-modal {
+        flex-direction: column; /* Empilha o formulário e a imagem */
+        width: 90%;
+    }
+    .suggestion-modal .form-right {
+        display: none; /* Esconde a imagem do pino para focar no formulário */
+    }
 }

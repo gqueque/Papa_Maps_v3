@@ -34,15 +34,28 @@
   object-fit: cover;
 }
 
+/* --- REGRA PARA TELAS PEQUENAS (CELULARES) --- */
 @media (max-width: 768px) {
   .login-card {
+    /* Empilha o formulário e a imagem */
     flex-direction: column;
+    /* Remove a largura fixa e a sombra para um visual mais limpo */
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
   }
+
   .login-card__image-section {
+    /* Esconde a imagem para economizar espaço */
     display: none;
   }
+
   .login-card__form-section {
+    /* Faz o formulário ocupar toda a largura e adiciona um pouco de padding */
     width: 100%;
     padding: 25px;
+    box-sizing: border-box; /* Garante que o padding não quebre o layout */
   }
 }
