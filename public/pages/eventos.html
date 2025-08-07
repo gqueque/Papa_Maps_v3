@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciar Eventos - PapaMaps Admin</title>
+    <title>Criar Novo Evento - PapaMaps Admin</title>
     
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/admin.css">
@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body class="eventos-page">
-  <script type="module" src="/js/admin-guard.js"></script>
-     <div class="dashboard-container">
+    <script type="module" src="/js/admin-guard.js"></script>
+    <div class="dashboard-container">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h3> PapaMaps Admin <img src="/assets/icon_bone.png" alt="Logo PapaMaps" style="vertical-align: middle; margin-right: 5px; height: 50px;"></h3>
+                <h3>PapaMaps Admin</h3>
             </div>
             <nav class="sidebar-nav">
                 <ul>
@@ -23,34 +23,74 @@
                     <li class="active"><a href="/pages/eventos.html"><i class="fas fa-plus-circle"></i> Criar Evento</a></li>
                     <li><a href="/pages/gerenciar-eventos.html"><i class="fas fa-tasks"></i> Gerenciar Eventos</a></li>
                     <li><a href="/index.html"><i class="fas fa-sign-out-alt"></i> Voltar para Tela inicial</a></li>
-                    
                 </ul>
             </nav>
         </aside>
 
         <div class="main-content">
-            
+            <header class="main-header">
+                <h1>Criar Novo Show</h1>
+            </header>
             <main>
                 <section class="main-panels">
                     <div class="panel">
-                        <h2>Criar Novo Show</h2>
                         <form id="form-novo-evento">
-                          <label for="event-name">Nome do Evento</label>
-                          <input type="text" id="event-name" placeholder="Ex: Papa Sunset Session" required>
-                          
-                          <label for="event-address">Endereço do Local</label>
-                          <input type="text" id="event-address" placeholder="Digite o endereço e selecione na lista" required>
-                          
-                          <label for="event-date">Data e Hora</label>
-                          <input type="datetime-local" id="event-date" required>
+                            <div class="form-group">
+                                <label for="event-status">Status do Evento</label>
+                                <select id="event-status" required>
+                                    <option value="Em negociação">Em negociação</option>
+                                    <option value="Confirmado">Confirmado</option>
+                                    <option value="Publicado/Anunciado">Publicado/Anunciado</option>
+                                    <option value="Cancelado">Cancelado</option>
+                                </select>
+                            </div>
 
-                          <label for="event-image">Foto do Evento</label>
-                          <input type="file" id="event-image" accept="image/jpeg, image/png, image/gif" />
-                          <img id="image-preview" src="" alt="Prévia da imagem" style="max-width: 100%; max-height: 200px; margin-top: 10px; display: none;" />
-                          <label for="event-ticket-link">Link para Ingressos (Opcional)</label>
-                          <input type="url" id="event-ticket-link" placeholder="https://site.com/ingressos...">
-                          <button type="submit" class="full-width-button">Salvar Evento</button>
-                      </form>
+                            <div class="form-tabs">
+                                <button type="button" class="tab-link active" data-tab="principal">Principal</button>
+                                <button type="button" class="tab-link" data-tab="negociacao">Negociação</button>
+                                <button type="button" class="tab-link" data-tab="contatos">Contatos</button>
+                                <button type="button" class="tab-link" data-tab="logistica">Logística</button>
+                            </div>
+
+                            <div class="tab-content active" id="tab-principal">
+                                <h3>Informações Públicas</h3>
+                                <div class="form-group"><label for="event-name">Nome do Evento</label><input type="text" id="event-name" required></div>
+                                <div class="form-group"><label for="event-address">Endereço do Local</label><input type="text" id="event-address" required></div>
+                                <div class="form-group"><label for="event-date">Data</label><input type="date" id="event-date" required></div>
+                                <div class="form-group"><label for="event-set-time">Set-time</label><input type="time" id="event-set-time" required></div>
+                                <div class="form-group"><label for="event-ticket-link">Link para Ingressos</label><input type="url" id="event-ticket-link"></div>
+                                <div class="form-group"><label for="event-image">Foto do Evento</label><input type="file" id="event-image" accept="image/*"><img id="image-preview" src="" class="hidden"></div>
+                            </div>
+
+                            <div class="tab-content" id="tab-negociacao">
+                                <h3>Detalhes Financeiros</h3>
+                                <div class="form-group"><label for="event-fee">Cachê (R$)</label><input type="number" id="event-fee" placeholder="Ex: 50000.00"></div>
+                                <div id="payment-conditions-container"></div>
+                                <button type="button" id="add-payment-condition">+ Adicionar Parcela</button>
+                            </div>
+
+                            <div class="tab-content" id="tab-contatos">
+                                <h3>Contatos Principais</h3>
+                                <div class="form-group"><label for="contact-booker-name">Contratante: Nome</label><input type="text" id="contact-booker-name"></div>
+                                <div class="form-group"><label for="contact-booker-phone">Contratante: Celular</label><input type="tel" id="contact-booker-phone"></div>
+                                <div class="form-group"><label for="contact-booker-email">Contratante: E-mail</label><input type="email" id="contact-booker-email"></div>
+                                <hr>
+                                <div class="form-group"><label for="contact-producer-name">Produtor: Nome</label><input type="text" id="contact-producer-name"></div>
+                                <div class="form-group"><label for="contact-producer-phone">Produtor: Celular</label><input type="tel" id="contact-producer-phone"></div>
+                                <hr>
+                                <div class="form-group"><label for="contact-driver-name">Motorista: Nome</label><input type="text" id="contact-driver-name"></div>
+                                <div class="form-group"><label for="contact-driver-phone">Motorista: Celular</label><input type="tel" id="contact-driver-phone"></div>
+                            </div>
+                            
+                            <div class="tab-content" id="tab-logistica">
+                                <h3>Detalhes de Logística</h3>
+                                <div class="form-group"><label for="logistics-hotel">Hotel</label><textarea id="logistics-hotel" rows="3"></textarea></div>
+                                <div class="form-group"><label for="logistics-flight">Vôo</label><textarea id="logistics-flight" rows="3"></textarea></div>
+                                <div class="form-group"><label for="logistics-car">Transporte</label><textarea id="logistics-car" rows="3"></textarea></div>
+                            </div>
+                            
+                            <button type="submit" class="full-width-button">Salvar Novo Evento</button>
+                        </form>
                     </div>
                     <div class="panel">
                         <h2>Eventos no Mapa</h2>
